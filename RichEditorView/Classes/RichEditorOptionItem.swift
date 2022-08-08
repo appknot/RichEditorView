@@ -55,7 +55,7 @@ public struct RichEditorOptionItem: RichEditorOption {
 
 /// RichEditorOptions is an enum of standard editor actions
 public enum RichEditorDefaultOption: RichEditorOption {
-
+    case typeface
     case clear
     case undo
     case redo
@@ -79,7 +79,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
     case link
     
     public static let all: [RichEditorDefaultOption] = [
-        //.clear,
+        .clear,
         .undo, .redo, .bold, .italic,
         .subscript, .superscript, .strike, .underline,
         .textColor, .textBackgroundColor,
@@ -87,12 +87,17 @@ public enum RichEditorDefaultOption: RichEditorOption {
         .indent, outdent, orderedList, unorderedList,
         .alignLeft, .alignCenter, .alignRight, .image, .link
     ]
+    
+    public static let custom: [RichEditorDefaultOption] = [
+        .typeface, .alignLeft, .alignCenter, .link, .image
+    ]
 
     // MARK: RichEditorOption
 
     public var image: UIImage? {
         var name = ""
         switch self {
+        case .typeface: name = "typeface"
         case .clear: name = "clear"
         case .undo: name = "undo"
         case .redo: name = "redo"
@@ -109,19 +114,20 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .outdent: name = "outdent"
         case .orderedList: name = "ordered_list"
         case .unorderedList: name = "unordered_list"
-        case .alignLeft: name = "justify_left"
-        case .alignCenter: name = "justify_center"
+        case .alignLeft: name = "alignleft"
+        case .alignCenter: name = "aligncenter"
         case .alignRight: name = "justify_right"
-        case .image: name = "insert_image"
-        case .link: name = "insert_link"
+        case .image: name = "image"
+        case .link: name = "link"
         }
         
         let bundle = Bundle(for: RichEditorToolbar.self)
-        return UIImage(named: name, in: bundle, compatibleWith: nil)?.withRenderingMode(.alwaysTemplate)
+        return UIImage(named: name, in: bundle, compatibleWith: nil)
     }
     
     public var title: String {
         switch self {
+        case .typeface: return NSLocalizedString("Typeface", comment: "")
         case .clear: return NSLocalizedString("Clear", comment: "")
         case .undo: return NSLocalizedString("Undo", comment: "")
         case .redo: return NSLocalizedString("Redo", comment: "")
@@ -148,6 +154,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
     
     public func action(_ toolbar: RichEditorToolbar, sender: AnyObject) {
         switch self {
+        case .typeface: toolbar.openSubMenu()
         case .clear: toolbar.editor?.removeFormat()
         case .undo: toolbar.editor?.undo()
         case .redo: toolbar.editor?.redo()
