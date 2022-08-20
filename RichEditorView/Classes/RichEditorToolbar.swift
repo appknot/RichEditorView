@@ -78,6 +78,8 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
     private var menuStackView: UIStackView!
     private var subMenuStackView: UIStackView!
     
+    private var maxHeightConstraint: NSLayoutConstraint?
+    private var minHeightConstraint: NSLayoutConstraint?
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -90,35 +92,58 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
     }
     
     private func initViews() {
+        backgroundColor = .white
         
-        translatesAutoresizingMaskIntoConstraints = false
+        translatesAutoresizingMaskIntoConstraints = true
+        maxHeightConstraint = heightAnchor.constraint(equalToConstant: 96)
+        maxHeightConstraint?.isActive = false
+        minHeightConstraint = heightAnchor.constraint(equalToConstant: 48)
+        minHeightConstraint?.isActive = true
+        
+        let mainView = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
+        addSubview(mainView)
+        
+        mainStackView = UIStackView(frame: .init(x: 12, y: 8, width: 168, height: 32))
+        mainView.addSubview(mainStackView)
+        mainStackView.spacing = 8
+        mainStackView.distribution = .equalSpacing
+        mainStackView.axis = .horizontal
+        
+        
+        let divider = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1))
+        mainView.addSubview(divider)
+        divider.backgroundColor = .init(rgb: 0xf2f2f2)
+        
+        
+//        translatesAutoresizingMaskIntoConstraints = false
 //        heightAnchor.constraint(equalToConstant: 48).isActive = true
 //        backgroundColor = .blue
-        mainStackView = UIStackView()
-        mainStackView.axis = .vertical
-        mainStackView.distribution = .equalSpacing
-        mainStackView.spacing = 0
+//        mainStackView = UIStackView()
+//        mainStackView.axis = .vertical
+//        mainStackView.distribution = .equalSpacing
+//        mainStackView.spacing = 0
 
-        addSubview(mainStackView)
-        mainStackView.translatesAutoresizingMaskIntoConstraints = true
-        mainStackView.backgroundColor = .systemPink
-        
-        NSLayoutConstraint.activate([
-            mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            mainStackView.topAnchor.constraint(equalTo: topAnchor),
-            mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            mainStackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width)
-        ])
+//        addSubview(mainStackView)
+//        mainStackView.translatesAutoresizingMaskIntoConstraints = true
+//        mainStackView.backgroundColor = .systemPink
+//
+//        NSLayoutConstraint.activate([
+//            mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+//            mainStackView.topAnchor.constraint(equalTo: topAnchor),
+//            mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+//            mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+//            mainStackView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.width)
+//        ])
 
-        let menuView = UIView()
-        mainStackView.addArrangedSubview(menuView)
-        menuView.translatesAutoresizingMaskIntoConstraints = true
-        let heightConstraint = menuView.heightAnchor.constraint(equalToConstant: 48)
-        heightConstraint.priority = UILayoutPriority(rawValue: 750)
-        heightConstraint.isActive = true
+//        let menuView = UIView()
+//        mainStackView.addArrangedSubview(menuView)
+//        menuView.translatesAutoresizingMaskIntoConstraints = true
+//        let heightConstraint = menuView.heightAnchor.constraint(equalToConstant: 48)
+//        heightConstraint.priority = UILayoutPriority(rawValue: 750)
+//        heightConstraint.isActive = true
         
-        self.setNeedsUpdateConstraints()
+//        self.setNeedsUpdateConstraints()
+//        self.layoutIfNeeded()
         
 //        autoresizingMask = .flexibleWidth
 
@@ -144,17 +169,42 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
 //        addSubview(visualView)
     }
     
-    func openSubMenu() {
+    @objc func openSubMenu() {
         print("\(#file.split(separator: "/").last!)-\(#function)[\(#line)]")
+        
+        minHeightConstraint?.isActive = false
+        maxHeightConstraint?.isActive = true
+        
+        layoutIfNeeded()
     }
     
     private func updateToolbar() {
         // main option 변경되면 해당 메소드 호출됨
 //        collectionView.reloadData()
+        for (tag, option) in options.enumerated() {
+            let button = UIButton(frame: .init(x: 0, y: 0, width: 32, height: 32))
+            if let image = option.image {
+                button.setImage(image, for: .normal)
+                button.imageView?.contentMode = .scaleAspectFit
+            } else {
+                button.setTitle(option.title, for: .normal)
+            }
+            button.tag = tag
+            button.addTarget(self, action: #selector(actionHandler(_:)), for: .touchUpInside)
+            mainStackView.addArrangedSubview(button)
+        }
     }
     
-    private func updateSubToolbar() {
+    @objc func actionHandler(_ button: UIButton) {
+        let option = options[button.tag]
+        option.action(self, sender: button)
+    }
+    
+    func updateSubToolbar() {
+        print("서브 툴바 업데이트")
         
+//        heightAnchor.constraint(equalToConstant: 40).isActive = true
+
     }
     
 //    func stringWidth(_ text: String, withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
