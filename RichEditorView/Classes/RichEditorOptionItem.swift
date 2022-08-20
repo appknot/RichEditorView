@@ -197,7 +197,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .image: toolbar.delegate?.richEditorToolbarInsertImage?(toolbar)
         case .link: toolbar.delegate?.richEditorToolbarInsertLink?(toolbar)
         case .finish: toolbar.editor?.finish()
-        case .size: toolbar.editor?.finish() // todo
+        case .size: toolbar.showTextSize()
         case .color: toolbar.showTextColor()
         case .colorChip: toolbar.delegate?.richEditorToolbarChangeTextColor?(toolbar, sender: sender)
         }

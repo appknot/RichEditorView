@@ -81,7 +81,7 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         .init(rgb: 0xd1d5d8),
     ]
     
-
+    private let sizeOptions = RichEditorDefaultOption.textSize
     /// The tint color to apply to the toolbar background.
 //    open var barTintColor: UIColor? {
 //        get { return backgroundColor }
@@ -108,7 +108,6 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
     
     // 서체편집 선택 > 텍스트 크기 선택
     private var sizeScrollView: UIScrollView!
-    private var sizeStackView: UIStackView!
     
     // 전체 크기
     private var maxHeightConstraint: NSLayoutConstraint?
@@ -182,7 +181,7 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         subOptions = RichEditorDefaultOption.submenu
         
         // 텍스트 컬러
-        textColorScrollView = UIScrollView(frame: .init(x: 1, y: 0, width: UIScreen.main.bounds.width, height: 47))
+        textColorScrollView = UIScrollView(frame: .init(x: 0, y: 1, width: UIScreen.main.bounds.width, height: 47))
         menuView.addSubview(textColorScrollView)
         textColorScrollView.backgroundColor = .init(rgb: 0xf7f7f7)
         textColorScrollView.contentInsetAdjustmentBehavior = .never
@@ -192,6 +191,16 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         textColorScrollView.isHidden = true
         updateTextColorToolbar()
         
+        // 텍스트 사이즈
+        sizeScrollView = UIScrollView(frame: .init(x: 0, y: 1, width: UIScreen.main.bounds.width, height: 47))
+        menuView.addSubview(sizeScrollView)
+        sizeScrollView.backgroundColor = .init(rgb: 0xf7f7f7)
+        sizeScrollView.contentInsetAdjustmentBehavior = .never
+        sizeScrollView.showsVerticalScrollIndicator = false
+        sizeScrollView.showsHorizontalScrollIndicator = false
+        sizeScrollView.contentInset = .init(top: 0, left: 8, bottom: 0, right: 10)
+        sizeScrollView.isHidden = true
+        updateTextSizeToolbar()
         
 //        textColorStackView = UIStackView()
 //        textColorScrollView.addSubview(textColorStackView)
@@ -317,6 +326,33 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         textColorScrollView.contentSize = .init(width: priorView.frame.origin.x + priorView.frame.size.width, height: textColorScrollView.frame.size.height)
     }
     
+    private func updateTextSizeToolbar() {
+        let bundle = Bundle(for: RichEditorToolbar.self)
+        let backImage = UIImage(named: "back", in: bundle, compatibleWith: nil)
+        
+        let backButton = UIButton(frame: .init(x: 0, y: -1, width: 28, height: 48))
+        backButton.addTarget(self, action: #selector(backSubToolbar), for: .touchUpInside)
+        backButton.setImage(backImage, for: .normal)
+        sizeScrollView.addSubview(backButton)
+        
+        var priorView: UIView = backButton
+        let sizeName = ["제목 1", "제목 2", "본문"]
+        for tag in 0 ..< sizeOptions.count {
+            let button = UIButton()
+            sizeScrollView.addSubview(button)
+            button.setTitle(sizeName[tag], for: .normal)
+            button.titleLabel?.sizeToFit()
+            button.setTitleColor(.black, for: .normal)
+            button.setTitleColor(.init(rgb: 0xfb4760), for: .selected)
+            button.frame = .init(x: priorView.frame.origin.x + priorView.frame.size.width + 8, y: -1, width: button.titleLabel?.frame.size.width ?? 0, height: 48)
+            button.tag = tag
+            button.addTarget(self, action: #selector(changeTextSize(_:)), for: .touchUpInside)
+            priorView = button
+        }
+        
+        sizeScrollView.contentSize = .init(width: priorView.frame.origin.x + priorView.frame.size.width, height: sizeScrollView.frame.size.height)
+    }
+    
     @objc func toggleSubMenu() {
         isSubMenuOpen.toggle()
         
@@ -352,6 +388,11 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         option.action(self, sender: color)
     }
     
+    @objc func changeTextSize(_ button: UIButton) {
+        let option = sizeOptions[button.tag]
+        option.action(self, sender: button)
+    }
+    
     /// 키보드 닫음
     @objc func finish() {
         editor?.finish()
@@ -360,11 +401,16 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
     /// 서체 편집으로 돌아가기
     @objc func backSubToolbar() {
         textColorScrollView.isHidden = true
+        sizeScrollView.isHidden = true
     }
     
     /// 텍스트 컬러 선택 툴바
     @objc func showTextColor() {
         textColorScrollView.isHidden = false
+    }
+    
+    @objc func showTextSize() {
+        sizeScrollView.isHidden = false
     }
     
 //    func stringWidth(_ text: String, withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
