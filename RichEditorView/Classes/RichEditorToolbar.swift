@@ -65,6 +65,22 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         }
     }
     
+    private let colors: [UIColor] = [
+        .init(rgb: 0x41a85f),
+        .init(rgb: 0x3d8eb9),
+        .init(rgb: 0x2969b0),
+        .init(rgb: 0x553982),
+        .init(rgb: 0x28324e),
+        .init(rgb: 0x000000),
+        .init(rgb: 0xffffff),
+        .init(rgb: 0xfac51c),
+        .init(rgb: 0xf37934),
+        .init(rgb: 0xd14841),
+        .init(rgb: 0xb8312f),
+        .init(rgb: 0x7c706b),
+        .init(rgb: 0xd1d5d8),
+    ]
+    
 
     /// The tint color to apply to the toolbar background.
 //    open var barTintColor: UIColor? {
@@ -285,27 +301,14 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         backButton.setImage(backImage, for: .normal)
         textColorScrollView.addSubview(backButton)
         
-        let colors: [UIColor] = [
-            .init(rgb: 0x41a85f),
-            .init(rgb: 0x3d8eb9),
-            .init(rgb: 0x2969b0),
-            .init(rgb: 0x553982),
-            .init(rgb: 0x28324e),
-            .init(rgb: 0x000000),
-            .init(rgb: 0xffffff),
-            .init(rgb: 0xfac51c),
-            .init(rgb: 0xf37934),
-            .init(rgb: 0xd14841),
-            .init(rgb: 0xb8312f),
-            .init(rgb: 0x7c706b),
-            .init(rgb: 0xd1d5d8),
-        ]
         var priorView: UIView = backButton
-        for color in colors {
+        for (tag, color) in colors.enumerated() {
             let button = UIButton()
             textColorScrollView.addSubview(button)
             button.setImage(UIImage(color: color, size: .init(width: 32, height: 32)), for: .normal)
             button.frame = .init(x: priorView.frame.origin.x + priorView.frame.size.width + 8, y: 7, width: 32, height: 32)
+            button.addTarget(self, action: #selector(changeTextColor(_:)), for: .touchUpInside)
+            button.tag = tag
             priorView = button
         }
         
@@ -339,6 +342,12 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
     @objc func subActionHnadler(_ button: UIButton) {
         let option = subOptions[button.tag]
         option.action(self, sender: button)
+    }
+    
+    @objc func changeTextColor(_ button: UIButton) {
+        let color = colors[button.tag]
+        let option = RichEditorDefaultOption.colorChip
+        option.action(self, sender: color)
     }
     
     /// 키보드 닫음

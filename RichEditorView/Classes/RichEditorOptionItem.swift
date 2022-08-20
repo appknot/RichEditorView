@@ -80,6 +80,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
     case finish
     case size
     case color
+    case colorChip
     
     public static let all: [RichEditorDefaultOption] = [
         .clear,
@@ -129,6 +130,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .finish: name = "finish"
         case .size: name = "size"
         case .color: name = "color"
+        case .colorChip: name = "colorChip"
         }
         
         let bundle = Bundle(for: RichEditorToolbar.self)
@@ -162,6 +164,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .finish: return NSLocalizedString("Finish", comment: "")
         case .size: return NSLocalizedString("Text Size", comment: "")
         case .color: return NSLocalizedString("Text Color", comment: "")
+        case .colorChip: return "colorChip"
         }
     }
     
@@ -192,6 +195,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .finish: toolbar.editor?.finish()
         case .size: toolbar.editor?.finish() // todo
         case .color: toolbar.editor?.finish() // todo
+        case .colorChip: toolbar.delegate?.richEditorToolbarChangeTextColor?(toolbar, sender: sender)
         }
     }
 }
