@@ -189,8 +189,9 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         textColorScrollView.showsVerticalScrollIndicator = false
         textColorScrollView.showsHorizontalScrollIndicator = false
         textColorScrollView.contentInset = .init(top: 0, left: 8, bottom: 0, right: 10)
-        
+        textColorScrollView.isHidden = true
         updateTextColorToolbar()
+        
         
 //        textColorStackView = UIStackView()
 //        textColorScrollView.addSubview(textColorStackView)
@@ -298,6 +299,7 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         let backImage = UIImage(named: "back", in: bundle, compatibleWith: nil)
         
         let backButton = UIButton(frame: .init(x: 0, y: -1, width: 28, height: 48))
+        backButton.addTarget(self, action: #selector(backSubToolbar), for: .touchUpInside)
         backButton.setImage(backImage, for: .normal)
         textColorScrollView.addSubview(backButton)
         
@@ -355,7 +357,15 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         editor?.finish()
     }
     
-
+    /// 서체 편집으로 돌아가기
+    @objc func backSubToolbar() {
+        textColorScrollView.isHidden = true
+    }
+    
+    /// 텍스트 컬러 선택 툴바
+    @objc func showTextColor() {
+        textColorScrollView.isHidden = false
+    }
     
 //    func stringWidth(_ text: String, withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
 //        let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)

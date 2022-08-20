@@ -99,6 +99,10 @@ public enum RichEditorDefaultOption: RichEditorOption {
     public static let submenu: [RichEditorDefaultOption] = [
         .bold, .italic, .underline, .strike, .size, .color
     ]
+    
+    public static let textSize: [RichEditorDefaultOption] = [
+        .header(2), .header(4), .header(6)
+    ]
 
     // MARK: RichEditorOption
 
@@ -194,7 +198,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .link: toolbar.delegate?.richEditorToolbarInsertLink?(toolbar)
         case .finish: toolbar.editor?.finish()
         case .size: toolbar.editor?.finish() // todo
-        case .color: toolbar.editor?.finish() // todo
+        case .color: toolbar.showTextColor()
         case .colorChip: toolbar.delegate?.richEditorToolbarChangeTextColor?(toolbar, sender: sender)
         }
     }
