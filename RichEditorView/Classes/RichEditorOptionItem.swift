@@ -77,6 +77,9 @@ public enum RichEditorDefaultOption: RichEditorOption {
     case alignRight
     case image
     case link
+    case finish
+    case size
+    case color
     
     public static let all: [RichEditorDefaultOption] = [
         .clear,
@@ -90,6 +93,10 @@ public enum RichEditorDefaultOption: RichEditorOption {
     
     public static let custom: [RichEditorDefaultOption] = [
         .typeface, .alignLeft, .alignCenter, .link, .image
+    ]
+    
+    public static let submenu: [RichEditorDefaultOption] = [
+        .bold, .italic, .underline, .strike, .size, .color
     ]
 
     // MARK: RichEditorOption
@@ -105,7 +112,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .italic: name = "italic"
         case .subscript: name = "subscript"
         case .superscript: name = "superscript"
-        case .strike: name = "strikethrough"
+        case .strike: name = "strike"
         case .underline: name = "underline"
         case .textColor: name = "text_color"
         case .textBackgroundColor: name = "bg_color"
@@ -119,6 +126,9 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .alignRight: name = "justify_right"
         case .image: name = "image"
         case .link: name = "link"
+        case .finish: name = "finish"
+        case .size: name = "size"
+        case .color: name = "color"
         }
         
         let bundle = Bundle(for: RichEditorToolbar.self)
@@ -149,6 +159,9 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .alignRight: return NSLocalizedString("Right", comment: "")
         case .image: return NSLocalizedString("Image", comment: "")
         case .link: return NSLocalizedString("Link", comment: "")
+        case .finish: return NSLocalizedString("Finish", comment: "")
+        case .size: return NSLocalizedString("Text Size", comment: "")
+        case .color: return NSLocalizedString("Text Color", comment: "")
         }
     }
     
@@ -176,6 +189,9 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .alignRight: toolbar.editor?.alignRight()
         case .image: toolbar.delegate?.richEditorToolbarInsertImage?(toolbar)
         case .link: toolbar.delegate?.richEditorToolbarInsertLink?(toolbar)
+        case .finish: toolbar.editor?.finish()
+        case .size: toolbar.editor?.finish() // todo
+        case .color: toolbar.editor?.finish() // todo
         }
     }
 }

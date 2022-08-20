@@ -377,6 +377,7 @@ private let DefaultInnerLineHeight: Int = 21
     }
     
     public func focus() {
+        
         runJS("RE.focus()")
     }
     
@@ -386,6 +387,10 @@ private let DefaultInnerLineHeight: Int = 21
     
     public func blur() {
         runJS("RE.blurFocus()")
+    }
+    
+    public func finish() {
+        _ = self.resignFirstResponder()
     }
     
     /// Runs some JavaScript on the WKWebView and returns the result

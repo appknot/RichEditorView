@@ -59,6 +59,14 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         }
     }
     
+    
+    
+    open var isKeyboardHiddenButtonShow: Bool = false {
+        didSet {
+            resignButton.isHidden = !isKeyboardHiddenButtonShow
+        }
+    }
+    
 
     /// The tint color to apply to the toolbar background.
 //    open var barTintColor: UIColor? {
@@ -74,12 +82,27 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
 //    }
 
 //    private var collectionView: UICollectionView!
+    private var mainView: UIView!
+    private var menuView: UIView!
+    
     private var mainStackView: UIStackView!
+    
+    // 서체편집 선택
     private var menuStackView: UIStackView!
-    private var subMenuStackView: UIStackView!
+    
+    // 서체편집 선택 > 텍스트 걸러 선택
+    private var textColorStackView: UIStackView!
+    private var textColorScrollView: UIScrollView!
+    
+    // 서체편집 선택 > 텍스트 크기 선택
+    private var sizeStackView: UIStackView!
+    private var sizeScrollView: UIScrollView!
     
     private var maxHeightConstraint: NSLayoutConstraint?
     private var minHeightConstraint: NSLayoutConstraint?
+    
+    private var isSubMenuOpen: Bool = false
+    private var resignButton: UIButton!
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -100,19 +123,52 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         minHeightConstraint = heightAnchor.constraint(equalToConstant: 48)
         minHeightConstraint?.isActive = true
         
-        let mainView = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
+        // 메인 뷰
+        mainView = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
         addSubview(mainView)
         
-        mainStackView = UIStackView(frame: .init(x: 12, y: 8, width: 168, height: 32))
+        // 메인 메뉴
+        mainStackView = UIStackView(frame: .init(x: 12, y: 0, width: 168, height: 48))
         mainView.addSubview(mainStackView)
-        mainStackView.spacing = 8
-        mainStackView.distribution = .equalSpacing
+        mainStackView.spacing = 2
+        mainStackView.distribution = .fillEqually
         mainStackView.axis = .horizontal
         
         
         let divider = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1))
         mainView.addSubview(divider)
         divider.backgroundColor = .init(rgb: 0xf2f2f2)
+        
+        resignButton = UIButton(frame: .init(x: UIScreen.main.bounds.width - 44, y: 8, width: 32, height: 32))
+        mainView.addSubview(resignButton)
+        let finishOptions = RichEditorDefaultOption.finish
+        resignButton.setImage(finishOptions.image, for: .normal)
+        resignButton.addTarget(self, action: #selector(finish), for: .touchUpInside)
+        resignButton.isHidden = true
+        
+        menuView = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
+        addSubview(menuView)
+        menuView.isHidden = true
+        
+        let menuDivider = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1))
+        menuView.addSubview(menuDivider)
+        menuDivider.backgroundColor = .init(rgb: 0xf2f2f2)
+        
+        menuStackView = UIStackView(frame: .init(x: 10, y: 0, width: 202, height: 48))
+        menuView.addSubview(menuStackView)
+        menuStackView.spacing = 2
+        menuStackView.distribution = .fillEqually
+        
+        options = RichEditorDefaultOption.custom
+        subOptions = RichEditorDefaultOption.submenu
+        
+//        menuScrollView.translatesAutoresizingMaskIntoConstraints = false
+//        menuScrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        menuScrollView.contentInsetAdjustmentBehavior = .never
+//        menuScrollView.showsVerticalScrollIndicator = false
+//        menuScrollView.showsHorizontalScrollIndicator = false
+//        menuScrollView.contentInset = .init(top: 0, left: 8, bottom: 0, right: 10)
+        
         
         
 //        translatesAutoresizingMaskIntoConstraints = false
@@ -169,18 +225,7 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
 //        addSubview(visualView)
     }
     
-    @objc func openSubMenu() {
-        print("\(#file.split(separator: "/").last!)-\(#function)[\(#line)]")
-        
-        minHeightConstraint?.isActive = false
-        maxHeightConstraint?.isActive = true
-        
-        layoutIfNeeded()
-    }
-    
     private func updateToolbar() {
-        // main option 변경되면 해당 메소드 호출됨
-//        collectionView.reloadData()
         for (tag, option) in options.enumerated() {
             let button = UIButton(frame: .init(x: 0, y: 0, width: 32, height: 32))
             if let image = option.image {
@@ -195,17 +240,58 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         }
     }
     
+    private func updateSubToolbar() {
+        for (tag, option) in subOptions.enumerated() {
+            let button = UIButton(frame: .init(x: 0, y: 0, width: 32, height: 48))
+            if let image = option.image {
+                button.setImage(image, for: .normal)
+                button.imageView?.contentMode = .scaleAspectFit
+            } else {
+                button.setTitle(option.title, for: .normal)
+            }
+            button.tag = tag
+            button.addTarget(self, action: #selector(subActionHnadler(_:)), for: .touchUpInside)
+            menuStackView.addArrangedSubview(button)
+        }
+    }
+    
+    @objc func openSubMenu() {
+        isSubMenuOpen.toggle()
+        
+        if isSubMenuOpen {
+            // 서브 뷰 추가하기
+            minHeightConstraint?.isActive = false
+            maxHeightConstraint?.isActive = true
+            mainView.frame = .init(x: 0, y: 48, width: UIScreen.main.bounds.width, height: 48)
+            menuView.isHidden = false
+            menuView.frame = .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48)
+        } else {
+            maxHeightConstraint?.isActive = false
+            minHeightConstraint?.isActive = true
+            mainView.frame = .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48)
+            menuView.isHidden = true
+        }
+        
+        layoutIfNeeded()
+    }
+    
+    
+    
     @objc func actionHandler(_ button: UIButton) {
         let option = options[button.tag]
         option.action(self, sender: button)
     }
     
-    func updateSubToolbar() {
-        print("서브 툴바 업데이트")
-        
-//        heightAnchor.constraint(equalToConstant: 40).isActive = true
-
+    @objc func subActionHnadler(_ button: UIButton) {
+        let option = subOptions[button.tag]
+        option.action(self, sender: button)
     }
+    
+    @objc func finish() {
+        editor?.finish()
+    }
+    
+
     
 //    func stringWidth(_ text: String, withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
 //        let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)
