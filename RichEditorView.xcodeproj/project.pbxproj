@@ -50,6 +50,9 @@
 		36A51EEC28B12B6000188842 /* strike_hightlight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 36A51EE928B12B6000188842 /* strike_hightlight@2x.png */; };
 		36A51EED28B12B6000188842 /* strike_hightlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 36A51EEA28B12B6000188842 /* strike_hightlight.png */; };
 		36A51EEE28B12B6000188842 /* strike_hightlight@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 36A51EEB28B12B6000188842 /* strike_hightlight@3x.png */; };
+		36A51EF228B1563900188842 /* check@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 36A51EEF28B1563900188842 /* check@3x.png */; };
+		36A51EF328B1563900188842 /* check.png in Resources */ = {isa = PBXBuildFile; fileRef = 36A51EF028B1563900188842 /* check.png */; };
+		36A51EF428B1563900188842 /* check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 36A51EF128B1563900188842 /* check@2x.png */; };
 		611EFBA328A0F564007715E6 /* normalize.css in Resources */ = {isa = PBXBuildFile; fileRef = FBA6AB191AD3ED2D00721644 /* normalize.css */; };
 		611EFBA428A0F564007715E6 /* rich_editor.html in Resources */ = {isa = PBXBuildFile; fileRef = FBA6AB1A1AD3ED2D00721644 /* rich_editor.html */; };
 		611EFBA528A0F564007715E6 /* rich_editor.js in Resources */ = {isa = PBXBuildFile; fileRef = FBA6AB1B1AD3ED2D00721644 /* rich_editor.js */; };
@@ -137,6 +140,9 @@
 		36A51EE928B12B6000188842 /* strike_hightlight@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "strike_hightlight@2x.png"; sourceTree = "<group>"; };
 		36A51EEA28B12B6000188842 /* strike_hightlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = strike_hightlight.png; sourceTree = "<group>"; };
 		36A51EEB28B12B6000188842 /* strike_hightlight@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "strike_hightlight@3x.png"; sourceTree = "<group>"; };
+		36A51EEF28B1563900188842 /* check@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@3x.png"; sourceTree = "<group>"; };
+		36A51EF028B1563900188842 /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
+		36A51EF128B1563900188842 /* check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check@2x.png"; sourceTree = "<group>"; };
 		611EFBAB28A10531007715E6 /* bold.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bold.png; sourceTree = "<group>"; };
 		611EFBAC28A10531007715E6 /* bold@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bold@2x.png"; sourceTree = "<group>"; };
 		611EFBCB28A105C9007715E6 /* bold@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bold@3x.png"; sourceTree = "<group>"; };
@@ -291,6 +297,9 @@
 		FBA6AB1D1AD3ED2D00721644 /* icons */ = {
 			isa = PBXGroup;
 			children = (
+				36A51EF028B1563900188842 /* check.png */,
+				36A51EF128B1563900188842 /* check@2x.png */,
+				36A51EEF28B1563900188842 /* check@3x.png */,
 				36A51EBE28B1114B00188842 /* back.png */,
 				36A51EBF28B1114B00188842 /* back@2x.png */,
 				36A51EBD28B1114B00188842 /* back@3x.png */,
@@ -457,6 +466,7 @@
 				611EFBA428A0F564007715E6 /* rich_editor.html in Resources */,
 				36A51ED528B12AA800188842 /* aligncenter_highlight@3x.png in Resources */,
 				36A51EEE28B12B6000188842 /* strike_hightlight@3x.png in Resources */,
+				36A51EF228B1563900188842 /* check@3x.png in Resources */,
 				36A51EE028B12AF800188842 /* italic_highlight@3x.png in Resources */,
 				611EFBE228A10867007715E6 /* link@3x.png in Resources */,
 				611EFBA528A0F564007715E6 /* rich_editor.js in Resources */,
@@ -484,12 +494,14 @@
 				36A51EE128B12AF800188842 /* italic_highlight@2x.png in Resources */,
 				36A51E9728B0AF7C00188842 /* finish@2x.png in Resources */,
 				36A51E9828B0AF7C00188842 /* finish.png in Resources */,
+				36A51EF328B1563900188842 /* check.png in Resources */,
 				36A51EAF28B104DE00188842 /* strike.png in Resources */,
 				36A51EDB28B12ACD00188842 /* bold_highlight.png in Resources */,
 				36A51EE228B12AF800188842 /* italic_highlight.png in Resources */,
 				36A51EC228B1114B00188842 /* back@2x.png in Resources */,
 				36A51EDC28B12ACD00188842 /* bold_highlight@3x.png in Resources */,
 				36A51EC128B1114B00188842 /* back.png in Resources */,
+				36A51EF428B1563900188842 /* check@2x.png in Resources */,
 				36A51EBA28B1052600188842 /* color.png in Resources */,
 				611EFBAF28A10531007715E6 /* bold@2x.png in Resources */,
 				36A51EB628B1050A00188842 /* size@2x.png in Resources */,

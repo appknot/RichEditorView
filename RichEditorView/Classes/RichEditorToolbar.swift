@@ -84,7 +84,19 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
     private let sizeOptions = RichEditorDefaultOption.textSize
     
     private var mainButtons: [UIButton] = []
+    private var sizeButtons: [UIButton] = []
     
+    private let checkImageView: UIImageView = {
+        let bundle = Bundle(for: RichEditorToolbar.self)
+        let image = UIImage(named: "check", in: bundle, compatibleWith: nil)
+        
+        let imageView = UIImageView(frame: .init(x: 7, y: 7, width: 18, height: 18))
+        imageView.image = image
+        imageView.isUserInteractionEnabled = false
+        return imageView
+    }()
+    
+    // 기본
     private var mainView: UIView!
     private var mainStackView: UIStackView!
     
@@ -249,6 +261,10 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
             button.addTarget(self, action: #selector(changeTextColor(_:)), for: .touchUpInside)
             button.tag = tag
             priorView = button
+            
+            if tag == 5 {
+                button.addSubview(checkImageView)
+            }
         }
         
         textColorScrollView.contentSize = .init(width: priorView.frame.origin.x + priorView.frame.size.width, height: textColorScrollView.frame.size.height)
@@ -275,6 +291,7 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
             button.frame = .init(x: priorView.frame.origin.x + priorView.frame.size.width + 8, y: -1, width: button.titleLabel?.frame.size.width ?? 0, height: 48)
             button.tag = tag
             button.addTarget(self, action: #selector(changeTextSize(_:)), for: .touchUpInside)
+            sizeButtons.append(button)
             priorView = button
         }
         
@@ -328,11 +345,17 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         let color = colors[button.tag]
         let option = RichEditorDefaultOption.colorChip
         option.action(self, sender: color)
+        
+        checkImageView.removeFromSuperview()
+        button.addSubview(checkImageView)
     }
     
     @objc func changeTextSize(_ button: UIButton) {
         let option = sizeOptions[button.tag]
         option.action(self, sender: button)
+        for sizeButton in sizeButtons {
+            sizeButton.isSelected = sizeButton == button ? true : false
+        }
     }
     
     /// 키보드 닫음
