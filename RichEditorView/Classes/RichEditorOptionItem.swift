@@ -167,7 +167,7 @@ public enum RichEditorDefaultOption: RichEditorOption {
     
     public func action(_ toolbar: RichEditorToolbar, sender: AnyObject) {
         switch self {
-        case .typeface: toolbar.openSubMenu()
+        case .typeface: toolbar.toggleSubMenu()
         case .clear: toolbar.editor?.removeFormat()
         case .undo: toolbar.editor?.undo()
         case .redo: toolbar.editor?.redo()

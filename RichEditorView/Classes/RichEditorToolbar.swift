@@ -59,8 +59,6 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         }
     }
     
-    
-    
     open var isKeyboardHiddenButtonShow: Bool = false {
         didSet {
             resignButton.isHidden = !isKeyboardHiddenButtonShow
@@ -83,25 +81,27 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
 
 //    private var collectionView: UICollectionView!
     private var mainView: UIView!
-    private var menuView: UIView!
-    
     private var mainStackView: UIStackView!
     
-    // 서체편집 선택
+    // 서체 편집
+    private var menuView: UIView!
     private var menuStackView: UIStackView!
     
     // 서체편집 선택 > 텍스트 걸러 선택
-    private var textColorStackView: UIStackView!
     private var textColorScrollView: UIScrollView!
     
     // 서체편집 선택 > 텍스트 크기 선택
-    private var sizeStackView: UIStackView!
     private var sizeScrollView: UIScrollView!
+    private var sizeStackView: UIStackView!
     
+    // 전체 크기
     private var maxHeightConstraint: NSLayoutConstraint?
     private var minHeightConstraint: NSLayoutConstraint?
     
+    /// 서체 편집 열기/닫기
     private var isSubMenuOpen: Bool = false
+    
+    /// 키보드 내림 버튼
     private var resignButton: UIButton!
     
     public override init(frame: CGRect) {
@@ -139,6 +139,7 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         mainView.addSubview(divider)
         divider.backgroundColor = .init(rgb: 0xf2f2f2)
         
+        // 키보드 내림 버튼
         resignButton = UIButton(frame: .init(x: UIScreen.main.bounds.width - 44, y: 8, width: 32, height: 32))
         mainView.addSubview(resignButton)
         let finishOptions = RichEditorDefaultOption.finish
@@ -146,7 +147,9 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         resignButton.addTarget(self, action: #selector(finish), for: .touchUpInside)
         resignButton.isHidden = true
         
+        // 서체편집
         menuView = UIView(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48))
+        menuView.backgroundColor = .init(rgb: 0xf7f7f7)
         addSubview(menuView)
         menuView.isHidden = true
         
@@ -162,14 +165,33 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         options = RichEditorDefaultOption.custom
         subOptions = RichEditorDefaultOption.submenu
         
-//        menuScrollView.translatesAutoresizingMaskIntoConstraints = false
-//        menuScrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//        menuScrollView.contentInsetAdjustmentBehavior = .never
-//        menuScrollView.showsVerticalScrollIndicator = false
-//        menuScrollView.showsHorizontalScrollIndicator = false
-//        menuScrollView.contentInset = .init(top: 0, left: 8, bottom: 0, right: 10)
+        // 텍스트 컬러
+        textColorScrollView = UIScrollView(frame: .init(x: 1, y: 0, width: UIScreen.main.bounds.width, height: 47))
+        menuView.addSubview(textColorScrollView)
+        textColorScrollView.backgroundColor = .init(rgb: 0xf7f7f7)
+        textColorScrollView.contentInsetAdjustmentBehavior = .never
+        textColorScrollView.showsVerticalScrollIndicator = false
+        textColorScrollView.showsHorizontalScrollIndicator = false
+        textColorScrollView.contentInset = .init(top: 0, left: 8, bottom: 0, right: 10)
         
+        updateTextColorToolbar()
         
+//        textColorStackView = UIStackView()
+//        textColorScrollView.addSubview(textColorStackView)
+//        textColorStackView.translatesAutoresizingMaskIntoConstraints = true
+//        textColorStackView.axis = .horizontal
+//        textColorStackView.distribution = .equalSpacing
+//        textColorStackView.spacing = 8
+//
+//        NSLayoutConstraint.activate([
+//            textColorStackView.leadingAnchor.constraint(equalTo: textColorScrollView.leadingAnchor),
+//            textColorStackView.topAnchor.constraint(equalTo: textColorScrollView.topAnchor),
+//            textColorStackView.trailingAnchor.constraint(equalTo: textColorScrollView.trailingAnchor),
+//            textColorStackView.bottomAnchor.constraint(equalTo: textColorScrollView.bottomAnchor),
+//        ])
+        
+//        textColorStackView.addArrangedSubview(backButton)
+  
         
 //        translatesAutoresizingMaskIntoConstraints = false
 //        heightAnchor.constraint(equalToConstant: 48).isActive = true
@@ -255,7 +277,42 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         }
     }
     
-    @objc func openSubMenu() {
+    private func updateTextColorToolbar() {
+        let bundle = Bundle(for: RichEditorToolbar.self)
+        let backImage = UIImage(named: "back", in: bundle, compatibleWith: nil)
+        
+        let backButton = UIButton(frame: .init(x: 0, y: -1, width: 28, height: 48))
+        backButton.setImage(backImage, for: .normal)
+        textColorScrollView.addSubview(backButton)
+        
+        let colors: [UIColor] = [
+            .init(rgb: 0x41a85f),
+            .init(rgb: 0x3d8eb9),
+            .init(rgb: 0x2969b0),
+            .init(rgb: 0x553982),
+            .init(rgb: 0x28324e),
+            .init(rgb: 0x000000),
+            .init(rgb: 0xffffff),
+            .init(rgb: 0xfac51c),
+            .init(rgb: 0xf37934),
+            .init(rgb: 0xd14841),
+            .init(rgb: 0xb8312f),
+            .init(rgb: 0x7c706b),
+            .init(rgb: 0xd1d5d8),
+        ]
+        var priorView: UIView = backButton
+        for color in colors {
+            let button = UIButton()
+            textColorScrollView.addSubview(button)
+            button.setImage(UIImage(color: color, size: .init(width: 32, height: 32)), for: .normal)
+            button.frame = .init(x: priorView.frame.origin.x + priorView.frame.size.width + 8, y: 7, width: 32, height: 32)
+            priorView = button
+        }
+        
+        textColorScrollView.contentSize = .init(width: priorView.frame.origin.x + priorView.frame.size.width, height: textColorScrollView.frame.size.height)
+    }
+    
+    @objc func toggleSubMenu() {
         isSubMenuOpen.toggle()
         
         if isSubMenuOpen {
@@ -271,11 +328,8 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
             mainView.frame = .init(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 48)
             menuView.isHidden = true
         }
-        
         layoutIfNeeded()
     }
-    
-    
     
     @objc func actionHandler(_ button: UIButton) {
         let option = options[button.tag]
@@ -287,6 +341,7 @@ private let DefaultFont = UIFont.preferredFont(forTextStyle: .body)
         option.action(self, sender: button)
     }
     
+    /// 키보드 닫음
     @objc func finish() {
         editor?.finish()
     }
