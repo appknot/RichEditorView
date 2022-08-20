@@ -13,7 +13,7 @@ public protocol RichEditorOption {
 
     /// The image to be displayed in the RichEditorToolbar.
     var image: UIImage? { get }
-
+    var highlightImage: UIImage? { get }
     /// The title of the item.
     /// If `image` is nil, this will be used for display in the RichEditorToolbar.
     var title: String { get }
@@ -28,9 +28,10 @@ public protocol RichEditorOption {
 /// RichEditorOptionItem is a concrete implementation of RichEditorOption.
 /// It can be used as a configuration object for custom objects to be shown on a RichEditorToolbar.
 public struct RichEditorOptionItem: RichEditorOption {
-
     /// The image that should be shown when displayed in the RichEditorToolbar.
     public var image: UIImage?
+    
+    public var highlightImage: UIImage?
 
     /// If an `itemImage` is not specified, this is used in display
     public var title: String
@@ -135,6 +136,23 @@ public enum RichEditorDefaultOption: RichEditorOption {
         case .size: name = "size"
         case .color: name = "color"
         case .colorChip: name = "colorChip"
+        }
+        
+        let bundle = Bundle(for: RichEditorToolbar.self)
+        return UIImage(named: name, in: bundle, compatibleWith: nil)
+    }
+    
+    public var highlightImage: UIImage? {
+        var name = ""
+        switch self {
+        case .typeface: name = "typeface_highlight"
+        case .alignLeft: name = "alignleft_highlight"
+        case .alignCenter: name = "aligncenter_highlight"
+        case .bold: name = "bold_highlight"
+        case .italic: name = "italic_highlight"
+        case .underline: name = "underline_highlight"
+        case .strike: name = "strike_hightlight"
+        default: name = ""
         }
         
         let bundle = Bundle(for: RichEditorToolbar.self)
