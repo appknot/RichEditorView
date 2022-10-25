@@ -271,6 +271,7 @@ RE.insertHTML = function(html) {
 
 RE.insertLink = function(url, title) {
     RE.restorerange();
+    /*
     const sel = document.getSelection();
     if (sel.toString().length !== 0) {
         if (sel.rangeCount) {
@@ -284,7 +285,13 @@ RE.insertLink = function(url, title) {
             sel.addRange(range);
         }
     }
+    */
+    const sel = document.createElement('a');
+    sel.setAttribute('href', url);
+    sel.setAttribute('title', title);
+    sel.innerHTML = title
     
+    RE.insertHTML(sel.outerHTML)
     RE.sendInputCallback();
 };
 
